@@ -1,0 +1,7 @@
+node_modules
+dist
+data/reports.json
+data/demo-events.json
+server.log
+vite-preview.log
+*.local
