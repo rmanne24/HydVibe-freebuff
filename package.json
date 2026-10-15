@@ -4,12 +4,13 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "concurrently -k \"vite\" \"node server/index.mjs\"",
-    "dev:web": "vite",
+    "dev": "concurrently -k \"node scripts/run.mjs vite\" \"node server/index.mjs\"",
+    "dev:web": "node scripts/run.mjs vite",
     "dev:api": "node server/index.mjs",
-    "build": "tsc --noEmit && vite build",
-    "test": "vitest run",
-    "typecheck": "tsc --noEmit"
+    "build": "tsc --noEmit && node scripts/run.mjs vite build",
+    "test": "node scripts/run.mjs vitest run",
+    "typecheck": "tsc --noEmit",
+    "postinstall": "node scripts/patch-rollup.mjs"
   },
   "dependencies": {
     "cors": "^2.8.5",
@@ -24,6 +25,7 @@
     "react-router-dom": "^7.18.4"
   },
   "devDependencies": {
+    "@rollup/wasm-node": "^4.64.5",
     "@types/cors": "^2.8.19",
     "@types/express": "^5.0.1",
     "@types/leaflet": "^1.9.4",
