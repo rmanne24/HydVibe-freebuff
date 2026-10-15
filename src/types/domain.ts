@@ -55,6 +55,14 @@ export interface CrowdSummary {
   explanation: string
 }
 
+export interface LocalitySummary {
+  locality: string
+  level: CrowdLevel | null
+  reportCount: number
+  lastUpdated: number | null
+  windowMs: number
+}
+
 export interface UserPreferences {
   budget: number | null
   requiredAmenities: string[]

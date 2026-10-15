@@ -3,41 +3,179 @@
 @tailwind utilities;
 
 html {
-  color-scheme: dark;
+  color-scheme: light dark;
 }
 
 body {
   margin: 0;
-  background: #101210;
-  color: #f5f5ef;
+  background: linear-gradient(165deg, #b3bac5 0%, #aab2be 38%, #969fac 100%);
+  background-attachment: fixed;
+  color: #222a33;
+  font-family: 'Inter', 'DM Sans', system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
 
 ::selection {
-  background: rgba(199, 243, 107, 0.3);
+  background: rgba(244, 255, 0, 0.45);
+  color: #222a33;
 }
 
-/* Leaflet dark-friendly tweaks */
+/* ---------- Signature soft-3D panel recipes ---------- */
+
+/* Outer floating device shell (dark, layered borders, ambient shadow) */
+.floating-panel {
+  position: relative;
+  border-radius: 2.25rem;
+  border: 1.5px solid rgba(255, 255, 255, 0.45);
+  box-shadow: 0 24px 60px -24px rgba(18, 24, 31, 0.38), 0 4px 12px rgba(18, 24, 31, 0.12),
+    inset 0 1px 0 rgba(255, 255, 255, 0.14);
+}
+
+/* Icy-white inner card sitting inside a dark panel */
+.frosted-card {
+  border-radius: 1.5rem;
+  background: linear-gradient(180deg, #eef2f5 0%, #e9eef2 55%, #dde4ea 100%);
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  box-shadow: 0 2px 10px rgba(18, 24, 31, 0.12), inset 0 1px 0 rgba(255, 255, 255, 0.9);
+}
+
+/* Subtle press / hover motion for tactile controls */
+.tactile {
+  transition: transform 160ms cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 160ms ease, background-color 160ms ease, border-color 160ms ease;
+}
+.tactile:hover {
+  transform: translateY(-2px);
+}
+.tactile:active {
+  transform: translateY(0) scale(0.97);
+}
+
+/* Card lift on hover */
+.card-lift {
+  transition: transform 220ms cubic-bezier(0.2, 0.7, 0.3, 1), box-shadow 220ms ease;
+}
+.card-lift:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 34px 70px -26px rgba(18, 24, 31, 0.48), 0 6px 16px rgba(18, 24, 31, 0.16);
+}
+
+/* Gentle rise-in for panels on mount */
+@keyframes rise-in {
+  from { opacity: 0; transform: translateY(18px) scale(0.985); }
+  to { opacity: 1; transform: translateY(0) scale(1); }
+}
+.rise-in {
+  animation: rise-in 0.55s cubic-bezier(0.2, 0.7, 0.3, 1) both;
+}
+.rise-in-slow { animation-delay: 0.12s; }
+.rise-in-slower { animation-delay: 0.24s; }
+
+/* Fade-in for feed rows / list items */
+@keyframes fade-slide {
+  from { opacity: 0; transform: translateY(6px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+.fade-slide { animation: fade-slide 0.35s ease both; }
+
+/* Elegant modal/pop-in for confirmation states */
+@keyframes pop-in {
+  0% { opacity: 0; transform: scale(0.9); }
+  60% { transform: scale(1.03); }
+  100% { opacity: 1; transform: scale(1); }
+}
+.pop-in { animation: pop-in 0.4s cubic-bezier(0.2, 0.7, 0.3, 1) both; }
+
+/* Neon pulse for live indicators */
+@keyframes neon-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(244, 255, 0, 0.55); }
+  50% { box-shadow: 0 0 0 5px rgba(244, 255, 0, 0.08); }
+}
+.neon-pulse { animation: neon-pulse 2.2s ease-in-out infinite; }
+
+/* Very subtle slow float for decorative showcase elements */
+@keyframes ambient-float {
+  0%, 100% { transform: translateY(0) rotate(var(--float-rot, 0deg)); }
+  50% { transform: translateY(-7px) rotate(var(--float-rot, 0deg)); }
+}
+.ambient-float { animation: ambient-float 7s ease-in-out infinite; }
+
+/* Decorative tilting: only on large screens — panels stack straight on
+   tablets and phones so nothing interactive reads sideways. */
+@media (min-width: 1024px) {
+  [data-tilt] {
+    transform: rotate(var(--tilt, 0deg));
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .rise-in, .fade-slide, .pop-in, .ambient-float, .neon-pulse {
+    animation: none !important;
+  }
+  .tactile, .card-lift {
+    transition: none !important;
+  }
+}
+
+/* Focus visibility on slate + dark surfaces */
+.focus-ring:focus-visible,
+.focus-ring:focus:focus-visible {
+  outline: 2px solid #f4ff00;
+  outline-offset: 2px;
+}
+
+/* ---------- Leaflet: keep map tile rendering neutral on slate ---------- */
 .leaflet-container {
-  background: #161a16;
+  background: #aab2be;
   font-family: inherit;
 }
+/* Layered rounded clipping is handled by the parent container. */
 .leaflet-tile {
-  filter: brightness(0.75) saturate(0.75) hue-rotate(-8deg);
-}
-.leaflet-popup-content-wrapper,
-.leaflet-popup-tip {
-  background: #222822;
-  color: #f5f5ef;
-  border: 1px solid #303830;
+  filter: saturate(0.82) contrast(0.96);
 }
 .leaflet-popup-content-wrapper {
-  border-radius: 12px;
+  background: #e9eef2;
+  color: #222a33;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+  border-radius: 1.25rem;
+  box-shadow: 0 16px 40px -18px rgba(18, 24, 31, 0.4);
+  padding: 4px 6px;
+}
+.leaflet-popup-tip {
+  background: #e9eef2;
+  border: 1px solid rgba(255, 255, 255, 0.85);
+}
+.leaflet-popup-content {
+  margin: 10px 14px;
+  font-family: inherit;
 }
 a.leaflet-popup-close-button {
-  color: #a5ada3;
+  color: #727d88;
+}
+.leaflet-control-zoom a {
+  background: #262c35 !important;
+  color: #f4f6f8 !important;
+  border: 1px solid rgba(255, 255, 255, 0.45) !important;
+}
+.leaflet-control-attribution {
+  background: rgba(38, 44, 53, 0.75) !important;
+  color: rgba(244, 246, 248, 0.7) !important;
+}
+.leaflet-control-attribution a {
+  color: #d9ff65 !important;
 }
 
+/* Slim scrollbars inside panels */
+.panel-scroll::-webkit-scrollbar {
+  width: 6px;
+}
+.panel-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+}
+.panel-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
